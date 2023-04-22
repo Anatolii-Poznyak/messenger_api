@@ -15,7 +15,7 @@ class CreateTokenView(ObtainAuthToken):
     serializer_class = AuthTokenSerializer
 
 
-class ManageUserView(generics.RetrieveUpdateAPIView):
+class ManageUserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
