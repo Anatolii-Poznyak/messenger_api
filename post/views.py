@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from post.models import Post
-from post.permissions import IsAdminOrIfAuthenticatedReadOnly, IsAuthorOrReadOnly
+from post.permissions import IsAuthorOrReadOnly
 from post.serializers import PostSerializer, PostDetailSerializer
 
 
