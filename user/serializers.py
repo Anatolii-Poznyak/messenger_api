@@ -43,6 +43,13 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ("id", "first_name", "last_name", "last_login")
 
 
+class UserImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ("id", "picture")
+
+
 class AuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField(label=_("Email"))
     password = serializers.CharField(
