@@ -1,14 +1,19 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
-    TokenVerifyView
+    TokenVerifyView,
 )
 
 
-from user.views import CreateUserView, ManageUserView, UserListViewSet, UserDetailViewSet, UserImageView
+from user.views import (
+    CreateUserView,
+    ManageUserView,
+    UserListViewSet,
+    UserDetailViewSet,
+    UserImageView,
+)
 
 app_name = "user"
 
@@ -22,6 +27,8 @@ urlpatterns = [
     path("token/verify/", TokenVerifyView.as_view(), name="token-verify"),
     path("me/", ManageUserView.as_view(), name="manage"),
     path("me/upload-image/", UserImageView.as_view(), name="upload-image"),
-    path("<int:pk>/", UserDetailViewSet.as_view({"get": "retrieve"}), name="user-detail"),
+    path(
+        "<int:pk>/", UserDetailViewSet.as_view({"get": "retrieve"}), name="user-detail"
+    ),
     path("", include(router.urls)),
 ]

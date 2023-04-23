@@ -44,11 +44,9 @@ class PostViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 "tag",
                 type={"type": "str"},
-                description="Filter by substring in hashtags(ex. ?tag=adm)"
+                description="Filter by substring in hashtags(ex. ?tag=adm)",
             ),
-
         ]
-
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

@@ -1,20 +1,21 @@
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import generics, mixins, viewsets, status
+from rest_framework import generics, viewsets, status
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.decorators import action
-from rest_framework.generics import GenericAPIView, get_object_or_404
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from pagination import UsersListPagination
-from user.models import User
-from user.serializers import UserSerializer, AuthTokenSerializer, UserDetailSerializer, UserListSerializer, \
-    UserImageSerializer
-from post.permissions import IsAuthorOrReadOnly
+from user.serializers import (
+    UserSerializer,
+    AuthTokenSerializer,
+    UserDetailSerializer,
+    UserListSerializer,
+    UserImageSerializer,
+)
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -36,7 +37,7 @@ class ManageUserView(generics.RetrieveUpdateDestroyAPIView):
 
 class UserListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserListSerializer
-    queryset = get_user_model().objects.all()
+    queryset = get_user_model().objects.all().order_by("id")
     permission_classes = (IsAuthenticated,)
     pagination_class = UsersListPagination
 
@@ -55,11 +56,9 @@ class UserListViewSet(viewsets.ReadOnlyModelViewSet):
             OpenApiParameter(
                 "name",
                 type={"type": "str"},
-                description="Filter by substring in name(ex. ?name=adm)"
+                description="Filter by substring in name(ex. ?name=adm)",
             ),
-
         ]
-
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -79,12 +78,13 @@ class UserDetailViewSet(viewsets.ReadOnlyModelViewSet):
 
 class UserImageView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = UserImageSerializer
 
     @staticmethod
     def post(request):
         serializer = UserImageSerializer(data=request.data)
         if serializer.is_valid():
-            request.user.image = serializer.validated_data['image']
+            request.user.image = serializer.validated_data["image"]
             request.user.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
