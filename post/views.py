@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -25,3 +26,27 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAuthorOrReadOnly]
         return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        hashtags = self.request.query_params.get("tag")
+
+        queryset = self.queryset
+
+        if hashtags:
+            queryset = queryset.filter(hashtags__icontains=hashtags)
+
+        return queryset.distinct()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "tag",
+                type={"type": "str"},
+                description="Filter by substring in hashtags(ex. ?tag=adm)"
+            ),
+
+        ]
+
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
