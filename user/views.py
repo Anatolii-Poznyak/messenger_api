@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics, mixins, viewsets, status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action
@@ -36,6 +37,30 @@ class UserListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserListSerializer
     queryset = get_user_model().objects.all()
     permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        name = self.request.query_params.get("name")
+
+        queryset = self.queryset
+
+        if name:
+            queryset = queryset.filter(first_name__icontains=name)
+
+        return queryset.distinct()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "name",
+                type={"type": "str"},
+                description="Filter by substring in name(ex. ?name=adm)"
+            ),
+
+        ]
+
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class UserDetailViewSet(viewsets.ReadOnlyModelViewSet):
