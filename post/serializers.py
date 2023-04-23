@@ -4,8 +4,8 @@ from post.models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source="user", read_only=True)
+    user = serializers.CharField(source="user.full_name", read_only=True)
 
     class Meta:
         model = Post
-        fields = ("id", "content", "created_at", "user")
+        fields = ("id", "user", "content", "created_at")
