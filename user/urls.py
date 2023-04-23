@@ -12,7 +12,7 @@ from user.views import CreateUserView, ManageUserView, UserListViewSet, UserDeta
 app_name = "user"
 
 router = DefaultRouter()
-router.register("", UserListViewSet, basename="user-list")
+router.register("all", UserListViewSet, basename="user-list")
 
 urlpatterns = [
     path("register/", CreateUserView.as_view(), name="create"),
