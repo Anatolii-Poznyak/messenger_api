@@ -10,6 +10,7 @@ from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
+from pagination import UsersListPagination
 from user.models import User
 from user.serializers import UserSerializer, AuthTokenSerializer, UserDetailSerializer, UserListSerializer, \
     UserImageSerializer
@@ -37,6 +38,7 @@ class UserListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserListSerializer
     queryset = get_user_model().objects.all()
     permission_classes = (IsAuthenticated,)
+    pagination_class = UsersListPagination
 
     def get_queryset(self):
         name = self.request.query_params.get("name")

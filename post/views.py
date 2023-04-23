@@ -2,6 +2,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from pagination import PostsListPagination
 from post.models import Post
 from post.permissions import IsAuthorOrReadOnly
 from post.serializers import PostSerializer, PostDetailSerializer
@@ -11,6 +12,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (IsAuthorOrReadOnly,)
+    pagination_class = PostsListPagination
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
