@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from post.models import Post
 from post.permissions import IsAdminOrIfAuthenticatedReadOnly, IsAuthorOrReadOnly
@@ -18,3 +19,11 @@ class PostViewSet(viewsets.ModelViewSet):
             return PostDetailSerializer
         return super().get_serializer_class()
 
+    def get_permissions(self):
+        if self.action == "list":
+            permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
+        elif self.action == "create":
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAuthorOrReadOnly]
+        return [permission() for permission in permission_classes]
