@@ -7,12 +7,12 @@ from rest_framework_simplejwt.views import (
 )
 
 
-from user.views import CreateUserView, ManageUserView, UserListViewSet
+from user.views import CreateUserView, ManageUserView, UserListViewSet, UserDetailViewSet
 
 app_name = "user"
 
 router = DefaultRouter()
-router.register("all", UserListViewSet, basename="user-list")
+router.register("", UserListViewSet, basename="user-list")
 
 urlpatterns = [
     path("register/", CreateUserView.as_view(), name="create"),
@@ -20,5 +20,6 @@ urlpatterns = [
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("me/", ManageUserView.as_view(), name="manage"),
+    path("<int:pk>/", UserDetailViewSet.as_view({"get": "retrieve"}), name="user_detail"),
     path("", include(router.urls)),
 ]
