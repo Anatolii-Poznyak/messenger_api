@@ -30,6 +30,7 @@ class ManageUserView(generics.RetrieveUpdateDestroyAPIView):
 class UserListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserListSerializer
     queryset = get_user_model().objects.all()
+    permission_classes = (IsAuthenticated,)
 
 
 class UserDetailViewSet(viewsets.ReadOnlyModelViewSet):

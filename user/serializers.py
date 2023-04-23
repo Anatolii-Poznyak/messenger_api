@@ -40,7 +40,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ("id", "email", "first_name", "last_name", "is_staff")
+        fields = ("id", "first_name", "last_name", "last_login")
 
 
 class AuthTokenSerializer(serializers.Serializer):

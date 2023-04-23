@@ -9,7 +9,7 @@ from post.serializers import PostSerializer, PostDetailSerializer
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    permission_classes = (IsAuthorOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -20,9 +20,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     def get_permissions(self):
-        if self.action == "list":
-            permission_classes = [IsAdminOrIfAuthenticatedReadOnly]
-        elif self.action == "create":
+        if self.action == "create" or self.action == "retrieve":
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthorOrReadOnly]
